@@ -1,0 +1,34 @@
+# Minecraft modding stuff
+/.gradle
+/.idea
+/build
+/out
+*.iml
+*.ipr
+*.iws
+forge*changelog.txt
+
+# Logs and config
+logs/
+run/
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+eclipse
+
+# gradle
+build
+.gradle
+
+# other
+run
