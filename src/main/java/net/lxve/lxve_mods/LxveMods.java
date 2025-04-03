@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(LxveMods.MOD_ID)
+@Mod(value = LxveMods.MOD_ID)
 public class LxveMods {
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "lxve_mods";
@@ -36,8 +36,22 @@ public class LxveMods {
     private static final Logger LOGGER = LogManager.getLogger();
 
     public LxveMods() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        
+        // Register commands
+        MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
+
+        // Register class unlock conditions
+        ClassRegistry.registerClass("TestClass", player -> {
+            LazyOptional<PlayerClassCapability> capability = player.getCapability(PlayerClassCapability.PLAYER_CLASS);
+            return capability.map(cap -> cap.getBlocksBroken() >= 5).orElse(false);
+        });
+
+        ClassRegistry.registerClass("Echofist", player -> {
+            LazyOptional<PlayerClassCapability> capability = player.getCapability(PlayerClassCapability.PLAYER_CLASS);
+            return capability.map(cap -> cap.getMobsKilledWithFist() >= 2).orElse(false);
+        });
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
